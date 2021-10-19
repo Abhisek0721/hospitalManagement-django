@@ -43,17 +43,23 @@
             </div>
         </nav>
 
-        <main>
+        <main style="display: flex;">
             {% if drafts %}
             {% for draft in drafts %}
-            <div class="card">
+            <div class="card mx-5 my-5" style="width: 18rem;">
                 <div class="card-header">
                   {{ draft.Categories }}
                 </div>
                 <div class="card-body">
                   <h5 class="card-title">{{ draft.Title }}</h5>
-                  <p class="card-text">{{ draft.Summary }}</p>
-                  <a href="/createblog/" class="btn btn-primary">Edit</a>
+                  <p class="card-text">
+                    {% if draft.Summary|length > 15 %}
+                      {{ draft.Summary|truncatechars:15 }}
+                    {% else %}
+                      {{ draft.Summary }}
+                    {% endif %}
+                  </p>
+                  <a href="/createblog/" type="submit" class="btn btn-primary">Edit</a>
                 </div>
               </div>
             {% endfor %}

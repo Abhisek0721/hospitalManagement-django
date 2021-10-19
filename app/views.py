@@ -165,6 +165,8 @@ def logout(request):
 def createBlogs(request):
     if request.method == 'POST':
         if 'auth' in request.session and 'name' in request.session:
+            if(request.POST['edit']):
+                print(request.POST['title'])
             username = request.session.get("name")
             title = request.POST["title"]
             image = request.FILES.get("file")
@@ -179,8 +181,9 @@ def createBlogs(request):
 
 def draft(request):
     if 'auth' in request.session and 'name' in request.session:
-        drafts = CreateBlog.objects.filter(username=request.session.get("name")).first()
-        return render(request, "draft.html", {'drafts':drafts,})
+        drafts = CreateBlog.objects.filter(username=request.session.get("name"))
+        drafts = drafts.filter(Draft="on")
+        return render(request, "draft.html", {'drafts':drafts})
     else:
         return redirect("/")
 
