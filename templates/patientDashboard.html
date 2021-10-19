@@ -29,6 +29,9 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
                     <div class="d-flex">
+                        <a href="/viewblog/"><button class="btn btn-outline-primary mx-4">Blogs</button></a>
+                    </div>
+                    <div class="d-flex">
                         <a href="/logout/"><button class="btn btn-outline-primary mx-4">Log out</button></a>
                     </div>
                 </div>
@@ -60,7 +63,7 @@
                                         {% for eachAcc in doctor %}
                                         <tr>
                                             <th scope="row">{{eachAcc.firstName}} {{eachAcc.lastName}}</th>
-                                            <td><img src="{% static '/img/profile.png' %}" width="35" height="35" style="border-radius: 50%;"></td>
+                                            <td><img src="/media/{{eachAcc.profilePic}}" width="35" height="35" style="border-radius: 50%;"></td>
                                             <td>{{eachAcc.username}}</td>
                                             <td>{{eachAcc.email}}</td>
                                             <td>{{eachAcc.pincode}}</td>

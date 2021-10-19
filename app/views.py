@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 import json
 from django.core.signing import Signer
-from .models import SignupDoctor, SignupPatient
+from .models import SignupDoctor, SignupPatient, CreateBlog
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 
@@ -27,11 +27,7 @@ def signupDoctor(request):
     if 'msg' in request.session:
         request.session.pop('msg',None)
     if request.method == 'POST':
-        profilepic =  request.FILES.get("file")
-        # profilepic.name = 'profile'
-        # fss = FileSystemStorage()
-        # print(profilepic)
-        # fss.save(profilepic.name, profilepic) #save profile pic
+        profilepic =  request.FILES["file"]
         username = request.POST["username"]
         fname = request.POST["f-name"]
         lname = request.POST["l-name"]
@@ -81,7 +77,7 @@ def signupPatient(request):
         state = request.POST["state"]
 
         password = signer.sign_object({'password': f'{password1}'}) #encrypted password
-        check_username = SignupDoctor.objects.filter(username=username).exists()
+        check_username = SignupPatient.objects.filter(username=username).exists()
 
         if(check_username):
             request.session['signupMSG'] = "Username or Phone Number has already been registered!"
@@ -90,7 +86,7 @@ def signupPatient(request):
         else:
             if 'signupMSG' in request.session:
                 request.session.pop('signupMSG',None)
-            signup = SignupDoctor.objects.create(profilePic=profilepic, firstName = fname, lastName=lname, username=username, email=email, gender=gender, password=password, pincode=pincode, address=address, city=city, state=state)
+            signup = SignupPatient.objects.create(profilePic=profilepic, firstName = fname, lastName=lname, username=username, email=email, gender=gender, password=password, pincode=pincode, address=address, city=city, state=state)
             signup.save()
             request.session['msg'] = "Account has been created successfully !"
             return redirect('/loginPatient')
@@ -165,3 +161,28 @@ def logout(request):
         if i in request.session:
             request.session.pop(i,None)
     return redirect('/')
+
+def createBlogs(request):
+    if request.method == 'POST':
+        if 'auth' in request.session and 'name' in request.session:
+            username = request.session.get("name")
+            title = request.POST["title"]
+            image = request.FILES.get("file")
+            categories = request.POST["categories"]
+            summary = request.POST["summary"]
+            content = request.POST["content"]
+            draft = request.POST.get("saveasDraft")
+            create = CreateBlog.objects.create(username=username, Title=title, Image=image, Categories=categories, Summary=summary, Content=content, Draft=draft)
+            create.save()
+            return redirect("/viewblog")
+    return render(request, "createBlogs.html")
+
+def draft(request):
+    if 'auth' in request.session and 'name' in request.session:
+        drafts = CreateBlog.objects.filter(username=request.session.get("name")).first()
+        return render(request, "draft.html", {'drafts':drafts,})
+    else:
+        return redirect("/")
+
+def viewBlogs(request):
+    return render(request, "blogs.html")

@@ -20,6 +20,19 @@ class SignupDoctor(models.Model):
     def __str__(self):
         return self.username
 
+class CreateBlog(models.Model):
+    username = models.CharField(max_length=30)
+    Title = models.CharField(max_length=200)
+    Image = models.ImageField()
+    Categories = models.CharField(max_length=50)
+    Summary = models.TextField()
+    Content = models.TextField()
+    Draft = models.CharField(max_length=5)
+    datetime = models.DateTimeField(default=now)
+
+    def __str__(self):
+        return self.username
+
 
 class SignupPatient(models.Model):
     profilePic = models.ImageField()

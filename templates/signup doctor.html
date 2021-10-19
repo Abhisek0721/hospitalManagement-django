@@ -49,7 +49,7 @@
 </header>
 <article class="card-body">
 	
-<form method="POST" action="/signupDoctor/" accept-charset="UTF-8" onsubmit="return checkPassword(this);">
+<form method="POST" action="/signupDoctor/" accept-charset="UTF-8" onsubmit="return checkPassword(this);" enctype="multipart/form-data">
 	{% csrf_token %}
 	
 	<div class="profile-pic mb-4">
