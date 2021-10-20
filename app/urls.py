@@ -5,16 +5,20 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path("", views.home, name="home"),
-    path("signupDoctor/", views.signupDoctor, name="signupDoctor"),
-    path("signupPatient/", views.signupPatient, name="signupPatient"),
-    path("loginDoctor/", views.loginDoctor, name="loginDoctor"),
-    path("loginPatient/", views.loginPatient, name="loginPatient"),
-    path("doctorDashboard/", views.doctorDashboard, name="doctorDashboard"),
-    path("patientDashboard/", views.patientDashboard, name="patientDashboard"),
     path("logout/", views.logout, name="logout"),
-    path("createblog/", views.createBlogs, name="createBlogs"),
+    # url for Patients
+    path("signupPatient/", views.signupPatient, name="signupPatient"),
+    path("loginPatient/", views.loginPatient, name="loginPatient"),
     path("viewblog/", views.viewBlogs, name="viewBlogs"),
+    path("patientDashboard/", views.patientDashboard, name="patientDashboard"),
+    path("bloglist/", views.bloglist, name="bloglist"),
+    # url for Doctors
+    path("signupDoctor/", views.signupDoctor, name="signupDoctor"),
+    path("loginDoctor/", views.loginDoctor, name="loginDoctor"),
+    path("doctorDashboard/", views.doctorDashboard, name="doctorDashboard"),
+    path("createblog/", views.createBlogs, name="createBlogs"),
     path("draft/", views.draft, name="draft"),
+    path("myblog/", views.myblog, name="myblog"),
 ]
 
 

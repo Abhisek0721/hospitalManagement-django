@@ -165,18 +165,16 @@ def logout(request):
 def createBlogs(request):
     if request.method == 'POST':
         if 'auth' in request.session and 'name' in request.session:
-            if(request.POST['edit']):
-                print(request.POST['title'])
             username = request.session.get("name")
-            title = request.POST["title"]
+            title = request.POST.get("title")
             image = request.FILES.get("file")
-            categories = request.POST["categories"]
-            summary = request.POST["summary"]
-            content = request.POST["content"]
+            categories = request.POST.get("categories")
+            summary = request.POST.get("summary")
+            content = request.POST.get("content")
             draft = request.POST.get("saveasDraft")
             create = CreateBlog.objects.create(username=username, Title=title, Image=image, Categories=categories, Summary=summary, Content=content, Draft=draft)
             create.save()
-            return redirect("/viewblog")
+            return redirect("/myblog")
     return render(request, "createBlogs.html")
 
 def draft(request):
@@ -187,5 +185,22 @@ def draft(request):
     else:
         return redirect("/")
 
+def myblog(request):
+    if 'auth' in request.session and 'name' in request.session:
+        mentalHealth = CreateBlog.objects.filter(username=request.session.get("name")).filter(Draft=None).filter(Categories="Mental Health")
+        heartDisease = CreateBlog.objects.filter(username=request.session.get("name")).filter(Draft=None).filter(Categories="Heart Disease")
+        covid19 = CreateBlog.objects.filter(username=request.session.get("name")).filter(Draft=None).filter(Categories="COVID-19")
+        immunization = CreateBlog.objects.filter(username=request.session.get("name")).filter(Draft=None).filter(Categories="Immunization")
+        return render(request, "myblog.html", {'mentalHealth':mentalHealth, 'heartDisease':heartDisease, 'covid19':covid19, 'immunization':immunization})
+
+def bloglist(request):
+            mentalHealth = CreateBlog.objects.filter(Draft=None).filter(Categories="Mental Health")
+            heartDisease = CreateBlog.objects.filter(Draft=None).filter(Categories="Heart Disease")
+            covid19 = CreateBlog.objects.filter(Draft=None).filter(Categories="COVID-19")
+            immunization = CreateBlog.objects.filter(Draft=None).filter(Categories="Immunization")
+            return render(request, "bloglist.html", {'mentalHealth':mentalHealth, 'heartDisease':heartDisease, 'covid19':covid19, 'immunization':immunization})
+
 def viewBlogs(request):
-    return render(request, "blogs.html")
+    title = request.POST.get("titleInput")
+    blog = CreateBlog.objects.filter(Title=title).first()
+    return render(request, "blogs.html", {'blog':blog})

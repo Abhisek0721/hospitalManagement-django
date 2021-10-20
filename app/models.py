@@ -27,7 +27,7 @@ class CreateBlog(models.Model):
     Categories = models.CharField(max_length=50)
     Summary = models.TextField()
     Content = models.TextField()
-    Draft = models.CharField(max_length=5)
+    Draft = models.CharField(max_length=5, null=True)
     datetime = models.DateTimeField(default=now)
 
     def __str__(self):

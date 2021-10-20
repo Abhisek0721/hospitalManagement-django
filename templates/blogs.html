@@ -29,7 +29,7 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
                     <div class="d-flex">
-                        <a href="/patientDashboard/"><button class="btn btn-outline-primary mx-4">Dashboard</button></a>
+                        <a href="/myblog/"><button class="btn btn-outline-primary mx-4">Blogs</button></a>
                     </div>
                     <div class="d-flex">
                         <a href="/logout/"><button class="btn btn-outline-primary mx-4">Log out</button></a>
@@ -37,8 +37,13 @@
                 </div>
             </div>
         </nav>
-        <main>
-
+        <main class="container">
+            <h1 class="my-4">{{ blog.Title }}</h1>
+            <img src="/media/{{ blog.Image }}" class="img-fluid"  alt="...">
+            <div class="my-5 mx-5">By -{{blog.username}}    {{blog.datetime}}</div>
+            <p class="container-md mb-5">
+                {{ blog.Content }}
+            </p>
         </main>
 </body>
 </html>
