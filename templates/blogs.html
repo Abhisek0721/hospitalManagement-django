@@ -29,11 +29,13 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
                     <div class="d-flex">
-                        <a href="/myblog/"><button class="btn btn-outline-primary mx-4">Blogs</button></a>
+                        <a href="/bloglist/"><button class="btn btn-outline-primary mx-4">Blogs</button></a>
                     </div>
+                    {% if loginas %}
                     <div class="d-flex">
                         <a href="/logout/"><button class="btn btn-outline-primary mx-4">Log out</button></a>
                     </div>
+                    {% endif %}
                 </div>
             </div>
         </nav>

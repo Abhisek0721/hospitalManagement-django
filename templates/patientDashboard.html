@@ -51,12 +51,12 @@
                                         <thead style="text-align: center;">
                                           <tr>
                                             <th scope="col">Name</th>
-                                            <th scope="col">Pic</th>
-                                            <th scope="col">Username</th>
-                                            <th scope="col">Email</th>
+                                            <th scope="col">Profiel Picture</th>
+                                            <th scope="col">Specialist</th>
                                             <th scope="col">Pin Code</th>
                                             <th scope="col">City</th>
                                             <th scope="col">State</th>
+                                            <th scope="col">Appointment</th>
                                           </tr>
                                         </thead>
                                         <tbody style="text-align: center;">
@@ -64,11 +64,15 @@
                                         <tr>
                                             <th scope="row">{{eachAcc.firstName}} {{eachAcc.lastName}}</th>
                                             <td><img src="/media/{{eachAcc.profilePic}}" width="35" height="35" style="border-radius: 50%;"></td>
-                                            <td>{{eachAcc.username}}</td>
-                                            <td>{{eachAcc.email}}</td>
+                                            <td>{{eachAcc.specialist}}</td>
                                             <td>{{eachAcc.pincode}}</td>
                                             <td>{{eachAcc.city}}</td>
                                             <td>{{eachAcc.state}}</td>
+                                            <td>
+                                                <a href="/appointment/">
+                                                    <button class="btn btn-success mx-4">Book Appointment</button>
+                                                </a>
+                                            </td>
                                         </tr>
                                         {% endfor %}
                                         </tbody>

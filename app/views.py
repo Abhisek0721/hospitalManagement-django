@@ -31,6 +31,7 @@ def signupDoctor(request):
         username = request.POST["username"]
         fname = request.POST["f-name"]
         lname = request.POST["l-name"]
+        specialist = request.POST.get("Specialist")
         email = request.POST["email"]
         gender = request.POST["gender"]
         password1 = request.POST["Password"]
@@ -49,7 +50,7 @@ def signupDoctor(request):
         else:
             if 'signupMSG' in request.session:
                 request.session.pop('signupMSG',None)
-            signup = SignupDoctor.objects.create(profilePic=profilepic, firstName = fname, lastName=lname, username=username, email=email, gender=gender, password=password, pincode=pincode, address=address, city=city, state=state)
+            signup = SignupDoctor.objects.create(profilePic=profilepic, firstName = fname, lastName=lname, username=username, specialist=specialist, email=email, gender=gender, password=password, pincode=pincode, address=address, city=city, state=state)
             signup.save()
             request.session['msg'] = "Account has been created successfully !"
             return redirect('/loginDoctor')
@@ -60,11 +61,7 @@ def signupPatient(request):
     if 'msg' in request.session:
         request.session.pop('msg',None)
     if request.method == 'POST':
-        profilepic =  request.FILES.get("file")
-        # profilepic.name = 'profile'
-        # fss = FileSystemStorage()
-        # print(profilepic)
-        # fss.save(profilepic.name, profilepic) #save profile pic
+        profilepic =  request.FILES["file"]
         username = request.POST["username"]
         fname = request.POST["f-name"]
         lname = request.POST["l-name"]
@@ -111,6 +108,7 @@ def loginDoctor(request):
             if(password==dictPassword['password']):
                 request.session['name'] = name
                 request.session['auth'] = True
+                request.session['loginas'] = 'doctor'
                 if "msg" in request.session:
                     request.session.pop("msg",None)
                 return redirect('/doctorDashboard')
@@ -134,7 +132,7 @@ def loginPatient(request):
         name = request.POST.get('username')
         password = request.POST.get('password')
         request.session['auth'] = False
-        user = SignupDoctor.objects.filter(username=name).first()
+        user = SignupPatient.objects.filter(username=name).first()
         if user:
             jsonPassword = json.dumps(signer.unsign_object(user.password)) #dumps() converts python dictionary into json
             dictPassword = json.loads(jsonPassword) #loads() converts json into python dictionary
@@ -142,6 +140,7 @@ def loginPatient(request):
                 request.session['name'] = name
                 request.session['password'] = password
                 request.session['auth'] = True
+                request.session['loginas'] = 'patient'
                 if "msg" in request.session:
                     request.session.pop("msg",None)
                 return redirect('/patientDashboard')
@@ -156,7 +155,7 @@ def loginPatient(request):
 
 
 def logout(request):
-    store = ['auth','name','signupMSG','msg']
+    store = ['auth','name','signupMSG','msg','loginas']
     for i in store:
         if i in request.session:
             request.session.pop(i,None)
@@ -174,7 +173,7 @@ def createBlogs(request):
             draft = request.POST.get("saveasDraft")
             create = CreateBlog.objects.create(username=username, Title=title, Image=image, Categories=categories, Summary=summary, Content=content, Draft=draft)
             create.save()
-            return redirect("/myblog")
+            return redirect("/bloglist")
     return render(request, "createBlogs.html")
 
 def draft(request):
@@ -185,22 +184,20 @@ def draft(request):
     else:
         return redirect("/")
 
-def myblog(request):
-    if 'auth' in request.session and 'name' in request.session:
-        mentalHealth = CreateBlog.objects.filter(username=request.session.get("name")).filter(Draft=None).filter(Categories="Mental Health")
-        heartDisease = CreateBlog.objects.filter(username=request.session.get("name")).filter(Draft=None).filter(Categories="Heart Disease")
-        covid19 = CreateBlog.objects.filter(username=request.session.get("name")).filter(Draft=None).filter(Categories="COVID-19")
-        immunization = CreateBlog.objects.filter(username=request.session.get("name")).filter(Draft=None).filter(Categories="Immunization")
-        return render(request, "myblog.html", {'mentalHealth':mentalHealth, 'heartDisease':heartDisease, 'covid19':covid19, 'immunization':immunization})
-
 def bloglist(request):
-            mentalHealth = CreateBlog.objects.filter(Draft=None).filter(Categories="Mental Health")
-            heartDisease = CreateBlog.objects.filter(Draft=None).filter(Categories="Heart Disease")
-            covid19 = CreateBlog.objects.filter(Draft=None).filter(Categories="COVID-19")
-            immunization = CreateBlog.objects.filter(Draft=None).filter(Categories="Immunization")
-            return render(request, "bloglist.html", {'mentalHealth':mentalHealth, 'heartDisease':heartDisease, 'covid19':covid19, 'immunization':immunization})
+    loginas = None
+    if 'auth' in request.session and 'loginas' in request.session:
+        loginas = request.session.get("loginas")
+    mentalHealth = CreateBlog.objects.filter(Draft=None).filter(Categories="Mental Health")
+    heartDisease = CreateBlog.objects.filter(Draft=None).filter(Categories="Heart Disease")
+    covid19 = CreateBlog.objects.filter(Draft=None).filter(Categories="COVID-19")
+    immunization = CreateBlog.objects.filter(Draft=None).filter(Categories="Immunization")
+    return render(request, "bloglist.html", {'loginas': loginas, 'mentalHealth':mentalHealth, 'heartDisease':heartDisease, 'covid19':covid19, 'immunization':immunization})
 
 def viewBlogs(request):
+    loginas = None
+    if 'auth' in request.session and 'loginas' in request.session:
+        loginas = request.session.get("loginas")
     title = request.POST.get("titleInput")
     blog = CreateBlog.objects.filter(Title=title).first()
-    return render(request, "blogs.html", {'blog':blog})
+    return render(request, "blogs.html", {'loginas': loginas, 'blog':blog})

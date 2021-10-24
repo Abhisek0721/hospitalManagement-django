@@ -18,7 +18,6 @@ urlpatterns = [
     path("doctorDashboard/", views.doctorDashboard, name="doctorDashboard"),
     path("createblog/", views.createBlogs, name="createBlogs"),
     path("draft/", views.draft, name="draft"),
-    path("myblog/", views.myblog, name="myblog"),
 ]
 
 

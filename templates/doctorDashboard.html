@@ -62,7 +62,7 @@
                                         {% for eachAcc in patient %}
                                         <tr>
                                             <th scope="row">{{eachAcc.firstName}} {{eachAcc.lastName}}</th>
-                                            <td><img src="{% static '/img/profile.png' %}" width="35" height="35" style="border-radius: 50%;"></td>
+                                            <td><img src="/media/{{eachAcc.profilePic}}" width="35" height="35" style="border-radius: 50%;"></td>
                                             <td>{{eachAcc.username}}</td>
                                             <td>{{eachAcc.email}}</td>
                                             <td>{{eachAcc.pincode}}</td>

@@ -57,7 +57,7 @@
 		  <span class="glyphicon glyphicon-camera"></span>
 		  <span>Change Image</span>
 		</label>
-		<input id="file" type="file" onchange="loadFile(event)"/>
+		<input id="file" type="file" name="file" accept="image/*" onchange="loadFile(event)" required/>
 		<img src="{% static '/img/profile.png' %}" id="output" width="200" />
 	</div>
 

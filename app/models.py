@@ -8,6 +8,7 @@ class SignupDoctor(models.Model):
     firstName = models.CharField(max_length=30)
     lastName = models.CharField(max_length=30)
     username = models.CharField(max_length=30)
+    specialist = models.CharField(max_length=150, null=True)
     email = models.EmailField()
     gender = models.CharField(max_length=6)
     password = models.JSONField(max_length=300) # JSONField because it will be stored in encripted form
