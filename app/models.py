@@ -51,3 +51,12 @@ class SignupPatient(models.Model):
 
     def __str__(self):
         return self.username
+
+class Appointment(models.Model):
+    patientUsername = models.CharField(max_length=30)
+    nameOfPatient = models.CharField(max_length=80)
+    startTime = models.DateTimeField()
+    endTime = models.DateTimeField()
+
+    def __str__(self):
+        return self.patientUsername

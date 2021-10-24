@@ -74,7 +74,7 @@
                   </p>
                   <form action="/viewblog/" method="post">
                     {% csrf_token %}
-                    <input type="text" name="titleInput" value="{{blog.Title}}" style="width: 1px; height: 1px;" />
+                    <input type="text" name="titleInput" value="{{blog.Title}}" hidden />
                     <button type="submit" class="btn btn-primary">View</button>
                   </form>
                 </div>

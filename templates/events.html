@@ -32,7 +32,7 @@
                         <a href="/createblog/"><button class="btn btn-outline-primary mx-4">Blog Post</button></a>
                     </div>
                     <div class="d-flex">
-                        <a href="/events/"><button class="btn btn-outline-primary mx-4">Events</button></a>
+                        <a href="/doctorDashboard/"><button class="btn btn-outline-primary mx-4">Dashboard</button></a>
                     </div>
                     <div class="d-flex">
                         <a href="/logout/"><button class="btn btn-outline-primary mx-4">Log out</button></a>
@@ -42,7 +42,7 @@
         </nav>
         <main>
             <div id="Accounts" class="container-xxl" style="margin-top: 5%;">
-                <h3>Welcome  {{name}}:</h3>
+                <h3>Appoinment List:</h3>
                 <div class="container-sm" style="margin-top: 20px;"> 
                     <h4>Details of Patients</h4>
                     <div class="row">
@@ -52,25 +52,19 @@
                                     <table class="table table-dark table-striped">
                                         <thead style="text-align: center;">
                                           <tr>
-                                            <th scope="col">Name</th>
-                                            <th scope="col">Pic</th>
                                             <th scope="col">Username</th>
-                                            <th scope="col">Email</th>
-                                            <th scope="col">Pin Code</th>
-                                            <th scope="col">City</th>
-                                            <th scope="col">State</th>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Start Time</th>
+                                            <th scope="col">End Time</th>
                                           </tr>
                                         </thead>
                                         <tbody style="text-align: center;">
                                         {% for eachAcc in patient %}
                                         <tr>
-                                            <th scope="row">{{eachAcc.firstName}} {{eachAcc.lastName}}</th>
-                                            <td><img src="/media/{{eachAcc.profilePic}}" width="35" height="35" style="border-radius: 50%;"></td>
-                                            <td>{{eachAcc.username}}</td>
-                                            <td>{{eachAcc.email}}</td>
-                                            <td>{{eachAcc.pincode}}</td>
-                                            <td>{{eachAcc.city}}</td>
-                                            <td>{{eachAcc.state}}</td>
+                                            <td>{{eachAcc.patientUsername}}</td>
+                                            <th scope="row">{{eachAcc.nameOfPatient}}</th>
+                                            <td>{{eachAcc.startTime}}</td>
+                                            <td>{{eachAcc.endTime}}</td>
                                         </tr>
                                         {% endfor %}
                                         </tbody>

@@ -2,9 +2,12 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 import json
 from django.core.signing import Signer
-from .models import SignupDoctor, SignupPatient, CreateBlog
+from .models import Appointment, SignupDoctor, SignupPatient, CreateBlog
 from django.conf import settings
-from django.core.files.storage import FileSystemStorage
+from datetime import datetime, timedelta
+from googleapiclient.discovery import build
+from google.oauth2.credentials import Credentials
+
 
 
 # Create your views here.
@@ -201,3 +204,36 @@ def viewBlogs(request):
     title = request.POST.get("titleInput")
     blog = CreateBlog.objects.filter(Title=title).first()
     return render(request, "blogs.html", {'loginas': loginas, 'blog':blog})
+
+def appointment(request):
+    if(request.session.get("loginas") == "patient"):
+        if request.method == "POST":
+            usernameOfDoctor = request.POST["username"]
+            doctorDetail = SignupDoctor.objects.filter(username=usernameOfDoctor).first()
+            return render(request, "appointment.html", {"doctor":doctorDetail})
+    else:
+        return redirect("/")
+
+def confirmAppointment(request):
+    if request.method == "POST":
+        name = request.POST["name"]
+        specialist = request.POST["specialist"]
+        date = request.POST["date"]
+        startdatetime = request.POST["date"]+" "+request.POST["startTime"]
+        startTime = datetime.strptime(startdatetime, '%Y-%m-%d %H:%M')
+        endTime = startTime + timedelta(minutes=45)
+        patientUsername = request.session.get("name")
+        patient = SignupPatient.objects.filter(username=patientUsername).first()
+        nameOfPatient = patient.firstName+" "+patient.lastName
+        appointment = Appointment.objects.create(patientUsername=patientUsername, nameOfPatient=nameOfPatient, startTime=startTime, endTime=endTime)
+        appointment.save()
+        return render(request, "confirmed.html", {'name':name, "specialist":specialist, "date":date, "startTime": str(startTime), "endTime": str(endTime)})
+    return redirect("/patientDashboard")
+
+def events(request):
+    if 'auth' in request.session and 'loginas' in request.session:
+        if(request.session.get("loginas") == "doctor"):
+            patient = Appointment.objects.all()
+            return render(request, "events.html", {"patient":patient})
+    else:
+        return redirect("/")
