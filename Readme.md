@@ -1,5 +1,5 @@
 (Note - username and password for superuser is "abhi") //excluding "
 
-ClientID : 695482242681-kl1euqjv9beh5ug195741fbeaortnp43.apps.googleusercontent.com
+ClientID : 695482242681-84m93mtfa3euts7inkm8vm0tehb0m4fn.apps.googleusercontent.com
 
-ClientSecret : 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
+ClientSecret : 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

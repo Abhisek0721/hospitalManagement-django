@@ -1,11 +1,14 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 import json
+import os.path
 from django.core.signing import Signer
 from .models import Appointment, SignupDoctor, SignupPatient, CreateBlog
 from django.conf import settings
 from datetime import datetime, timedelta
 from googleapiclient.discovery import build
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 
 
@@ -227,6 +230,51 @@ def confirmAppointment(request):
         nameOfPatient = patient.firstName+" "+patient.lastName
         appointment = Appointment.objects.create(patientUsername=patientUsername, nameOfPatient=nameOfPatient, startTime=startTime, endTime=endTime)
         appointment.save()
+
+        #Creating an event for user using google calendar api
+        SCOPES = ['https://www.googleapis.com/auth/calendar.events']
+
+        creds = None
+
+        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+        flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
+        creds = flow.run_local_server(port=0)
+
+        service = build('calendar', 'v3', credentials=creds)
+
+        sTime = startTime.strftime("%Y-%m-%dT%H:%M") #Changing the formate of datetime
+        eTime = endTime.strftime("%Y-%m-%dT%H:%M") #Changing the formate of datetime
+        emailOfPatient = SignupPatient.objects.filter(username=patientUsername).first().email
+        
+        event = {
+        'summary': 'Appointment',
+        'description': 'Appointment with Doctor',
+        'start': {
+            'dateTime': str(sTime)+":00-05:30",
+            'timeZone': 'Asia/Kolkata',
+        },
+        'end': {
+            'dateTime': str(eTime)+":00-05:30",
+            'timeZone': 'Asia/Kolkata',
+        },
+        'recurrence': [
+            'RRULE:FREQ=DAILY;COUNT=2'
+        ],
+        'attendees': [
+            {'email': emailOfPatient},
+        ],
+        'reminders': {
+            'useDefault': False,
+            'overrides': [
+            {'method': 'email', 'minutes': 24 * 60},
+            {'method': 'popup', 'minutes': 10},
+            ],
+        },
+        }
+        
+        #line of code mentioned below will create an event
+        service.events().insert(calendarId='primary', body=event).execute()
+
         return render(request, "confirmed.html", {'name':name, "specialist":specialist, "date":date, "startTime": str(startTime), "endTime": str(endTime)})
     return redirect("/patientDashboard")
 
