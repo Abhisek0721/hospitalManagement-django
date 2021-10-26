@@ -220,6 +220,7 @@ def appointment(request):
 def confirmAppointment(request):
     if request.method == "POST":
         name = request.POST["name"]
+        usernameOfDoctor = request.POST["username"]
         specialist = request.POST["specialist"]
         date = request.POST["date"]
         startdatetime = request.POST["date"]+" "+request.POST["startTime"]
@@ -245,7 +246,8 @@ def confirmAppointment(request):
         sTime = startTime.strftime("%Y-%m-%dT%H:%M") #Changing the formate of datetime
         eTime = endTime.strftime("%Y-%m-%dT%H:%M") #Changing the formate of datetime
         emailOfPatient = SignupPatient.objects.filter(username=patientUsername).first().email
-        
+        emailOfDoctor = SignupDoctor.objects.filter(username=usernameOfDoctor).first().email
+
         event = {
         'summary': 'Appointment',
         'description': 'Appointment with Doctor',
@@ -262,6 +264,7 @@ def confirmAppointment(request):
         ],
         'attendees': [
             {'email': emailOfPatient},
+            {'email': emailOfDoctor},
         ],
         'reminders': {
             'useDefault': False,
